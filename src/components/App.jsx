@@ -1,5 +1,5 @@
+import { Component } from "react";
 import { nanoid } from 'nanoid'
-import React, { Component } from "react";
 import { PhonebookList } from './Phonebook/PhonebookList'
 
 
@@ -8,18 +8,25 @@ export class App extends Component{
   contacts: [],
   name: '',
     number: '',
-    find: ''
+    filter: ''
   }
-  
-  hendleChange = event => {
-    const {name, value} = event.currentTarget
-    this.setState({ [name]: [value] })
-  
+
+hendleChange = event => {
+    const { name, value } = event.currentTarget
+    this.setState({ [name]: value })
   }
   hendleSubmit = event => {
     event.preventDefault()
 
+    this.state.contacts.map(el => {
+      if (el.name.includes(this.state.name)) {
+        this.setState({ contacts: [...this.state.contacts] })
+        alert("NOT")
+  }
+})
     this.setState({ contacts: [...this.state.contacts, { name: this.state.name, tel:this.state.number}] })
+
+    
     this.reset()
     console.log(this.state.contacts)
 
@@ -30,20 +37,21 @@ export class App extends Component{
     this.setState({number: ""})
   }
 
-  hendleFind = () => {
-    // const {name, value} = event.currentTarget
-    // this.setState({ [name]: value })
-    if (this.state.find) {
-        return (
-          <PhonebookList contacts={this.state.contacts} find = {this.state.find}></PhonebookList>
-        )
-    }
-    // console.log('Hello')
-    //     this.setState(prevState => (this.state.contacts.find(el => console.log(el.name.join("") === prevState.find ? el : ""))))
-    
+     onDelete = (index) => {
+
+    this.setState(this.state.contacts.splice(index, 1))
   }
 
-  
+  hendleFind = () => {
+    if (this.state.filter) {
+       return (
+          <PhonebookList contacts={this.state.contacts.filter(el => el.name.includes(this.state.filter))}></PhonebookList>
+        )
+    } else {
+      return (<PhonebookList contacts={this.state.contacts} onDeleteItem = {this.onDelete} ></PhonebookList>)
+        }
+    
+  }
 
   render() {
     return (
@@ -80,7 +88,7 @@ export class App extends Component{
         </form>
         <label>
           Find contacts by name
-          <input type="text" name="find" value={this.state.find} onChange={this.hendleChange} />
+          <input type="text" name="filter" value={this.state.filter} onChange={this.hendleChange} />
           {this.hendleFind()}
         </label>
       </div>

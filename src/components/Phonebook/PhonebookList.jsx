@@ -1,11 +1,12 @@
 import { nanoid } from 'nanoid'
 
-export const PhonebookList = ({contacts, find}) => {
+export const PhonebookList = ({contacts, onDeleteItem}) => {
 return (
             <ul>
-                {contacts.map(({ name, tel }) =>
+                {contacts.map(({ name, tel }, index) =>
                 <li key={nanoid()}>
-                        {name}: {tel}
+                        <span>{name}: {tel}</span>
+                        <button type='button' onClick={()=>onDeleteItem(index)} key = {index}>Delete</button>
                     </li>
                 )}
              </ul>
