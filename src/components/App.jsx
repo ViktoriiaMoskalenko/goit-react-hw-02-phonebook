@@ -1,104 +1,60 @@
-import PropTypes from 'prop-types';
 import { Component } from "react";
-import { nanoid } from 'nanoid'
-import { PhonebookList } from './Phonebook/PhonebookList'
+import { ContactList } from './Phonebook/ContactList'
+import { ContactForm } from './Phonebook/ContactForm'
+import { Filter } from './Phonebook/Filter'
+import styles from './Phonebook/Phonebook.module.css'
 
 
 export class App extends Component{
   state = {
   contacts: [],
-  name: '',
-    number: '',
-    filter: ''
+  filter: ''
+
   }
 
-  static propTypes = {
-    contacts: PropTypes.array,
-    name: PropTypes.string,
-    number: PropTypes.string,
-    filter: PropTypes.string
-  }
 
-hendleChange = event => {
-    const { name, value } = event.currentTarget
-    this.setState({ [name]: value })
-  }
-  hendleSubmit = event => {
-    event.preventDefault()
-
-//     this.state.contacts.map(el => {
-//       if (el.name.includes(this.state.name)) {
-//         this.setState({ contacts: [...this.state.contacts] })
-//         return alert("NOT")
-//   }
-// })
-    this.setState({ contacts: [...this.state.contacts, { name: this.state.name, tel:this.state.number}] })
-
+  hendleSubmit = (name, number) => {
+    console.log(name, number)
     
-    this.reset()
-    console.log(this.state.contacts)
+    if (this.state.contacts.find(contact => contact.name.toLowerCase() === name.toLowerCase())) {
+      return alert(`${name} is already in contacts.`)
+    }
+
+
+    this.setState({ contacts: [...this.state.contacts, {name, number}] })
+
 
   }
   
-  reset = () => {
-    this.setState({ name: "" })
-    this.setState({number: ""})
-  }
 
      onDelete = (index) => {
 
     this.setState(this.state.contacts.splice(index, 1))
   }
 
+      hendleFilter = (value) => {
+        this.setState({ filter: value})
+        
+    }
+
+
   hendleFind = () => {
-    if (this.state.filter) {
-       return (
-          <PhonebookList contacts={this.state.contacts.filter(el => el.name.includes(this.state.filter))}></PhonebookList>
-        )
-    } else {
-      return (<PhonebookList contacts={this.state.contacts} onDeleteItem = {this.onDelete} ></PhonebookList>)
-        }
+    const {contacts} = this.state
+    const normalizedFilter = this.state.filter.toLowerCase();
+    return (contacts.filter(contact =>
+      contact.name.toLowerCase().includes(normalizedFilter)
+    ))
     
   }
 
   render() {
     return (
       <div>
-        <form onSubmit={this.hendleSubmit}>
-        <label>
-          Name
-          <input
-  type="text"
-        name="name"
-        value={this.state.name}
-        onChange={this.hendleChange}
-        id={
-          nanoid()
-        }
-  pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
-  title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
-  required
-/>
-          </label>
-          <label>
-            Number
-            <input
-  type="tel"
-              name="number"
-              value={this.state.number}
-              onChange={this.hendleChange}
-  pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
-  title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
-  required
-/>
-          </label>
-        <button type='submit'>Add contact</button>
-        </form>
-        <label>
-          Find contacts by name
-          <input type="text" name="filter" value={this.state.filter} onChange={this.hendleChange} />
-          {this.hendleFind()}
-        </label>
+        <h1 className={styles.title}>Phonebook</h1>
+        <ContactForm hendleSubmit={ this.hendleSubmit } />
+        <h2 className={styles.title}>Contacts</h2>
+        <Filter filter={this.state.filter} hendleFilter={ this.hendleFilter}/>
+        <ContactList contacts={this.hendleFind()} onDeleteItem = {this.onDelete}/>
       </div>
     )
   }
