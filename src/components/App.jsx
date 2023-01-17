@@ -12,9 +12,12 @@ export class App extends Component{
     filter: ''
   }
 
-  // static propTypes = {
-    
-  // }
+  static propTypes = {
+    contacts: PropTypes.array,
+    name: PropTypes.string,
+    number: PropTypes.string,
+    filter: PropTypes.string
+  }
 
 hendleChange = event => {
     const { name, value } = event.currentTarget
@@ -23,12 +26,12 @@ hendleChange = event => {
   hendleSubmit = event => {
     event.preventDefault()
 
-    this.state.contacts.map(el => {
-      if (el.name.includes(this.state.name)) {
-        this.setState({ contacts: [...this.state.contacts] })
-        alert("NOT")
-  }
-})
+//     this.state.contacts.map(el => {
+//       if (el.name.includes(this.state.name)) {
+//         this.setState({ contacts: [...this.state.contacts] })
+//         return alert("NOT")
+//   }
+// })
     this.setState({ contacts: [...this.state.contacts, { name: this.state.name, tel:this.state.number}] })
 
     
