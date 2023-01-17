@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import { Component } from "react";
 import { nanoid } from 'nanoid'
 import { PhonebookList } from './Phonebook/PhonebookList'
@@ -10,6 +11,10 @@ export class App extends Component{
     number: '',
     filter: ''
   }
+
+  // static propTypes = {
+    
+  // }
 
 hendleChange = event => {
     const { name, value } = event.currentTarget

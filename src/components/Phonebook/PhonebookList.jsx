@@ -1,4 +1,5 @@
 import { nanoid } from 'nanoid'
+import PropTypes from 'prop-types';
 
 export const PhonebookList = ({contacts, onDeleteItem}) => {
 return (
@@ -6,10 +7,13 @@ return (
                 {contacts.map(({ name, tel }, index) =>
                 <li key={nanoid()}>
                         <span>{name}: {tel}</span>
-                        <span></span>
                         <button type='button' onClick={()=>onDeleteItem(index)} key = {index}>Delete</button>
                     </li>
                 )}
              </ul>
          )
+}
+
+PhonebookList.prototype = {
+    contacts: PropTypes.array.isRequired
 }
